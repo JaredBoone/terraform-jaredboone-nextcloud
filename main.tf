@@ -133,14 +133,8 @@ resource "aws_instance" "nextcloud_ec2" {
   vpc_security_group_ids = ["${aws_security_group.default.id}", "${aws_security_group.ssh.id}", "${aws_security_group.postgres.id}", "${aws_security_group.http.id}"]
 
   root_block_device {
-    volume_size = 64
+    volume_size = 5
     delete_on_termination = true
-  }
-
-  ebs_block_device{
-    device_name = "/dev/sdf"
-    volume_size = 50
-    delete_on_termination = false
   }
 }
 
