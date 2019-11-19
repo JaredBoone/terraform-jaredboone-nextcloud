@@ -10,6 +10,12 @@ variable "aws_profile" {}
 
 variable "aws_region" {}
 
+variable "dbname" {}
+
+variable "dbusername" {}
+
+variable "dbpassword" {}
+
 resource "aws_kms_key" "this" {
 }
 
@@ -133,10 +139,20 @@ resource "aws_instance" "nextcloud_ec2" {
   vpc_security_group_ids = ["${aws_security_group.default.id}", "${aws_security_group.ssh.id}", "${aws_security_group.postgres.id}", "${aws_security_group.http.id}"]
 
   root_block_device {
-    volume_size = 5
+    volume_size = 10
     delete_on_termination = true
   }
 }
 
-
-
+resource "aws_db_instance" "this" {
+  allocated_storage    = 20
+  storage_type         = "gp2"
+  engine               = "postgres"
+  engine_version       = "10.10"
+  instance_class       = "db.t2.micro"
+  name                 = "${var.dbname}"
+  username             = "${var.dbusername}"
+  password             = "${var.dbpassword}"
+  port                 = 5432
+  vpc_security_group_ids   = ["${aws_security_group.default.id}", "${aws_security_group.postgres.id}"]
+}
